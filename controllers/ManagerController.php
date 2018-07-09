@@ -19,6 +19,7 @@ use Imagine\Image\Box;
 use Imagine\Image\Palette\RGB;
 use Imagine\Image\Point;
 use noam148\imagemanager\Module;
+use \Gumlet\ImageResize;
 
 /**
  * Manager controller for the `imagemanager` module
@@ -154,6 +155,19 @@ class ManagerController extends Controller {
 						//move_uploaded_file($sTempFile, $sMediaPath."/".$sFileName);
 						//save with Imagine class
 						Image::getImagine()->open($sTempFile)->save($sMediaPath . "/" . $sSaveFileName);
+						
+						// resize image
+						$imageOriginal = Image::getImagine()->open($sTempFile);
+						$imageOriginalSize = $imageOriginal->getSize();
+						$imageOriginalWidth = $imageOriginalSize->getWidth();
+						$imageOriginalHeight = $imageOriginalSize->getHeight();
+
+						if( $imageOriginalWidth > 500 ){
+						    $image = new ImageResize($sMediaPath . "/" . $sSaveFileName);
+						    $image->resizeToWidth(500);
+						    $image->save($sMediaPath . "/" . $sSaveFileName);
+						}
+						
 						$bSuccess = true;
 					}
 				}
